@@ -98,6 +98,28 @@ public enum PresetQuality: String, CaseIterable, Identifiable {
     }
 }
 
+public enum VirtualDisplayPreset: String, CaseIterable, Identifiable {
+    case fhdDesktop = "1920x1080/160"
+    case fhdCompact = "1920x1080/140"
+    case fhdLargeText = "1920x1080/180"
+    case qhdDesktop = "2560x1440/200"
+    case hdDesktop = "1280x720/120"
+    case nativeDpi = "1920x1080"
+
+    public var id: String { rawValue }
+
+    public var title: String {
+        switch self {
+        case .fhdDesktop: return "1080p Desktop (160 DPI - Rekomendasi)"
+        case .fhdCompact: return "1080p Kompak & Luas (140 DPI)"
+        case .fhdLargeText: return "1080p Teks Lebih Besar (180 DPI)"
+        case .qhdDesktop: return "2K QHD Desktop (200 DPI)"
+        case .hdDesktop: return "720p HD Desktop (120 DPI)"
+        case .nativeDpi: return "1080p Standar (Bawaan HP / Tanpa DPI)"
+        }
+    }
+}
+
 public struct ScrcpyConfig: Codable, Equatable {
     public var preset: String = PresetQuality.high.rawValue
     public var maxSize: Int = 1080
@@ -114,7 +136,7 @@ public struct ScrcpyConfig: Codable, Equatable {
 
     // Virtual New Display (--new-display)
     public var useNewDisplay: Bool = false
-    public var newDisplayResolution: String = "1920x1080"
+    public var newDisplayResolution: String = VirtualDisplayPreset.fhdDesktop.rawValue
 
     public init() {}
 }

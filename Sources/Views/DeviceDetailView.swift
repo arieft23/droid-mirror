@@ -12,6 +12,8 @@ public struct DeviceDetailView: View {
     @State private var apkMessage: String?
     @State private var screenshotURL: URL?
     @State private var isTakingScreenshot = false
+    @State private var isEnablingFreeform = false
+    @State private var freeformMessage: String?
 
     public init(device: Device) {
         self.device = device
@@ -188,32 +190,56 @@ public struct DeviceDetailView: View {
                 .pickerStyle(.segmented)
 
                 if config.useNewDisplay {
-                    HStack(spacing: 12) {
-                        Picker("Resolusi Virtual:", selection: $config.newDisplayResolution) {
-                            Text("1920x1080 (Full HD 16:9)").tag("1920x1080")
-                            Text("2560x1440 (2K QHD)").tag("2560x1440")
-                            Text("1280x720 (720p HD)").tag("1280x720")
-                            Text("3840x2160 (4K UHD)").tag("3840x2160")
+                    VStack(alignment: .leading, spacing: 10) {
+                        Picker("Preset Resolusi & DPI:", selection: $config.newDisplayResolution) {
+                            ForEach(VirtualDisplayPreset.allCases) { item in
+                                Text(item.title).tag(item.rawValue)
+                            }
                         }
                         .pickerStyle(.menu)
 
-                        Text("(--new-display=\(config.newDisplayResolution) -S)")
+                        Text("Parameter: --new-display=\(config.newDisplayResolution) -S")
                             .font(.system(.caption, design: .monospaced))
                             .foregroundColor(.accentColor)
+
+                        Divider()
+
+                        HStack {
+                            Button(action: {
+                                enableFreeform()
+                            }) {
+                                HStack(spacing: 6) {
+                                    if isEnablingFreeform {
+                                        ProgressView().controlSize(.small)
+                                    } else {
+                                        Image(systemName: "macwindow.on.rectangle")
+                                    }
+                                    Text("Aktifkan Mode Jendela Bebas (Freeform)")
+                                        .font(.caption)
+                                }
+                            }
+                            .buttonStyle(.bordered)
+                            .disabled(isEnablingFreeform)
+
+                            if let msg = freeformMessage {
+                                Text(msg)
+                                    .font(.caption2)
+                                    .foregroundColor(.green)
+                            }
+                        }
+
+                        HStack(alignment: .top, spacing: 6) {
+                            Image(systemName: "sparkles")
+                                .foregroundColor(.yellow)
+                                .font(.caption)
+                            Text("💡 **Samsung Pro-Tip**: Resolusi **160 DPI** adalah standar emas desktop. Pasang Rutinitas 'Battery Protection' di HP agar cas berhenti di 80-85% saat tersambung USB.")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
                     }
-                    .padding(8)
+                    .padding(10)
                     .background(Color.accentColor.opacity(0.08))
                     .cornerRadius(8)
-
-                    HStack(alignment: .top, spacing: 6) {
-                        Image(systemName: "sparkles")
-                            .foregroundColor(.yellow)
-                            .font(.caption)
-                        Text("💡 **Samsung Galaxy Pro-Tip**: Mode ini otomatis membuka **Samsung DeX**. Pasang Rutinitas 'Battery Protection' di HP agar pengisian daya dibatasi di 80-85% saat tersambung USB.")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                    }
-                    .padding(.horizontal, 4)
                 } else {
                     Picker("Kualitas Video:", selection: $config.preset) {
                         ForEach(PresetQuality.allCases) { preset in
@@ -330,6 +356,16 @@ public struct DeviceDetailView: View {
             }
             .buttonStyle(.bordered)
             .controlSize(.small)
+
+            HStack(spacing: 6) {
+                Image(systemName: "info.circle")
+                    .foregroundColor(.accentColor)
+                    .font(.caption2)
+                Text("Buka HP saat mirror? Tekan **Option + O** di jendela layar untuk mematikan layar HP lagi tanpa sleep.")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            }
+            .padding(.top, 2)
         }
         .padding()
         .background(Color(NSColor.controlBackgroundColor))
@@ -337,6 +373,21 @@ public struct DeviceDetailView: View {
     }
 
     // MARK: - Actions
+
+    private func enableFreeform() {
+        isEnablingFreeform = true
+        freeformMessage = "Mengaktifkan..."
+        Task {
+            let res = await adbService.enableFreeformDesktopMode(device: device)
+            switch res {
+            case .success(let msg):
+                freeformMessage = "✅ \(msg)"
+            case .failure(let err):
+                freeformMessage = "❌ \(err.localizedDescription)"
+            }
+            isEnablingFreeform = false
+        }
+    }
 
     private func takeScreenshot() {
         isTakingScreenshot = true
