@@ -161,7 +161,65 @@ def main():
             base = os.path.basename(os.path.realpath(dep))
             subprocess.run(["install_name_tool", "-change", dep, f"@rpath/{base}", dylib_path], check=False)
 
-    print("--- 7. Ad-hoc Codesigning bundle ---")
+    print("--- 7. Creating DroidMirrorScreen.app helper bundle ---")
+    screen_app = os.path.join(BIN_DIR, "DroidMirrorScreen.app")
+    screen_contents = os.path.join(screen_app, "Contents")
+    screen_macos = os.path.join(screen_contents, "MacOS")
+    screen_res = os.path.join(screen_contents, "Resources")
+    os.makedirs(screen_macos, exist_ok=True)
+    os.makedirs(screen_res, exist_ok=True)
+
+    screen_bin = os.path.join(screen_macos, "DroidMirrorScreen")
+    shutil.copy2(bundled_scrcpy, screen_bin)
+    os.chmod(screen_bin, 0o755)
+
+    # Set rpath to parent Frameworks directory
+    subprocess.run(["install_name_tool", "-add_rpath", "@executable_path/../../../../Frameworks", screen_bin], check=False)
+    subprocess.run(["install_name_tool", "-add_rpath", "@loader_path/../../../../Frameworks", screen_bin], check=False)
+
+    # Copy AppIcon to helper app
+    icon_src = os.path.join(ROOT_DIR, "Resources/AppIcon.icns")
+    if os.path.exists(icon_src):
+        shutil.copy2(icon_src, os.path.join(screen_res, "AppIcon.icns"))
+
+    # Write Info.plist for DroidMirrorScreen.app
+    screen_plist = """<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleExecutable</key>
+    <string>DroidMirrorScreen</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.arieft23.droidmirror.screen</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>DroidMirror</string>
+    <key>CFBundleDisplayName</key>
+    <string>DroidMirror</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon.icns</string>
+    <key>CFBundleIconName</key>
+    <string>AppIcon</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>13.0</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSRequiresAquaSystemAppearance</key>
+    <false/>
+</dict>
+</plist>
+"""
+    with open(os.path.join(screen_contents, "Info.plist"), "w") as f:
+        f.write(screen_plist)
+
+    print("--- 8. Ad-hoc Codesigning bundle ---")
     # Sign all dylibs
     for dylib_name in os.listdir(FRAMEWORKS_DIR):
         dylib_path = os.path.join(FRAMEWORKS_DIR, dylib_name)
@@ -170,6 +228,8 @@ def main():
     # Sign binaries
     subprocess.run(["codesign", "--force", "--sign", "-", bundled_adb], check=False)
     subprocess.run(["codesign", "--force", "--sign", "-", bundled_scrcpy], check=False)
+    subprocess.run(["codesign", "--force", "--sign", "-", screen_bin], check=False)
+    subprocess.run(["codesign", "--force", "--deep", "--sign", "-", screen_app], check=False)
     subprocess.run(["codesign", "--force", "--sign", "-", exec_path], check=False)
 
     # Sign whole app bundle

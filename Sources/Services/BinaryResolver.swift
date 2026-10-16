@@ -32,15 +32,18 @@ public final class BinaryResolver {
 
         if let resURL = bundleResourceURL {
             let adbCandidate = resURL.appendingPathComponent("bin/adb").path
-            let scrcpyCandidate = resURL.appendingPathComponent("bin/scrcpy").path
+            let screenAppCandidate = resURL.appendingPathComponent("bin/DroidMirrorScreen.app/Contents/MacOS/DroidMirrorScreen").path
+            let directScrcpyCandidate = resURL.appendingPathComponent("bin/scrcpy").path
             let serverCandidate = resURL.appendingPathComponent("bin/scrcpy-server").path
             let frameworksCandidate = resURL.deletingLastPathComponent().appendingPathComponent("Frameworks").path
 
             if fileManager.isExecutableFile(atPath: adbCandidate) {
                 bundledAdb = adbCandidate
             }
-            if fileManager.isExecutableFile(atPath: scrcpyCandidate) {
-                bundledScrcpy = scrcpyCandidate
+            if fileManager.isExecutableFile(atPath: screenAppCandidate) {
+                bundledScrcpy = screenAppCandidate
+            } else if fileManager.isExecutableFile(atPath: directScrcpyCandidate) {
+                bundledScrcpy = directScrcpyCandidate
             }
             if fileManager.fileExists(atPath: serverCandidate) {
                 bundledServer = serverCandidate
