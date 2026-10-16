@@ -29,7 +29,22 @@
 
 ---
 
-## 📁 Struktur Proyek
+## ⚡ Cara Pasang Paling Mudah (One-Line Installer)
+
+Cukup buka aplikasi **Terminal** di Mac kamu, lalu salin dan tempel perintah di bawah ini:
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/arieft23/droid-mirror/main/install.sh)"
+```
+
+**Apa yang dilakukan script ini secara otomatis?**
+1. Mendeteksi arsitektur Mac kamu (Apple Silicon M-Series).
+2. Mengunduh file `.app` versi terbaru dari GitHub.
+3. Memasangnya ke folder `/Applications`.
+4. **Membersihkan proteksi Gatekeeper (`xattr -cr`)** sehingga tidak muncul error *"App is damaged"*.
+5. Langsung membuka aplikasi **DroidMirror** di layar!
+
+---
 
 ```
 droid-mirror/
