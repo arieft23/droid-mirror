@@ -46,6 +46,34 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/arieft23/droid-mirror/ma
 
 ---
 
+## 🔥 Pro-Tip Pengguna Samsung: Otomatisasi Samsung DeX & Battery Protection
+
+Jika kamu menggunakan HP **Samsung Galaxy** (Galaxy S-series, Note, Z Fold, atau Tab S), fitur **Layar Virtual Baru (`--new-display=1920x1080 -S`)** di DroidMirror adalah kombinasi emas!
+
+### 1. Otomatis Membuka Samsung DeX di Mac
+Saat kamu memilih **Layar Virtual Baru**, sistem One UI Samsung akan membaca Mac kamu sebagai monitor eksternal dan **secara otomatis membuka antarmuka desktop Samsung DeX** di layar Mac dalam resolusi Full HD 16:9 yang luas dan tajam!
+
+### 2. Trik Otomasi "Modes and Routines" (Baterai Tetap Sehat 100%)
+Kelemahan mirroring lewat kabel USB seharian adalah baterai HP bisa terus terisi hingga 100% dan menjadi panas jika tidak dibatasi. Kamu bisa memanfaatkan fitur **Modes and Routines (Rutinitas)** di HP Samsung:
+
+1. Buka **Pengaturan (Settings)** di HP Samsung ➔ Pilih **Modes and Routines (Mode dan Rutinitas)** ➔ Tab **Routines (Rutinitas)**.
+2. Tambahkan Rutinitas Baru (+):
+   - **Kondisi (Jika / IF):**
+     - Pilih **"Samsung DeX"** ➔ **"Saat Samsung DeX dimulai"** (atau kondisi *"Status Pengisian Daya / Terhubung ke USB"*).
+   - **Tindakan (Maka / THEN):**
+     - Buka kategori **Baterai (Battery)** ➔ Aktifkan **"Lindungi Baterai (Protect Battery)"** (membatasi pengisian daya maksimal di 80% atau 85%).
+     - *(Opsional)* Aktifkan **"Jangan Ganggu (Do Not Disturb)"** atau atur profil suara hening selama sesi kerja.
+3. Simpan rutinitas tersebut.
+
+> 💡 **Hasilnya:**  
+> Begitu kamu klik *"Mulai Mirroring"* di DroidMirror:
+> - Samsung DeX langsung terbuka di layar Mac.
+> - Layar fisik HP otomatis mati (`-S`), menjaga suhu HP tetap adem.
+> - Fitur *Battery Protection* otomatis aktif membatasi pengisian baterai, sehingga **kamu bisa bekerja seharian tanpa khawatir baterai HP cepat kembung atau rusak**.
+> - Saat kabel dicabut atau mirroring selesai, HP kembali ke mode normal otomatis!
+
+---
+
 ```
 droid-mirror/
 ├── Sources/

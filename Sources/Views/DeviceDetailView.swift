@@ -204,6 +204,16 @@ public struct DeviceDetailView: View {
                     .padding(8)
                     .background(Color.accentColor.opacity(0.08))
                     .cornerRadius(8)
+
+                    HStack(alignment: .top, spacing: 6) {
+                        Image(systemName: "sparkles")
+                            .foregroundColor(.yellow)
+                            .font(.caption)
+                        Text("💡 **Samsung Galaxy Pro-Tip**: Mode ini otomatis membuka **Samsung DeX**. Pasang Rutinitas 'Battery Protection' di HP agar pengisian daya dibatasi di 80-85% saat tersambung USB.")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.horizontal, 4)
                 } else {
                     Picker("Kualitas Video:", selection: $config.preset) {
                         ForEach(PresetQuality.allCases) { preset in
