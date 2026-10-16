@@ -12,8 +12,6 @@ public struct DeviceDetailView: View {
     @State private var apkMessage: String?
     @State private var screenshotURL: URL?
     @State private var isTakingScreenshot = false
-    @State private var isEnablingFreeform = false
-    @State private var freeformMessage: String?
 
     public init(device: Device) {
         self.device = device
@@ -202,32 +200,6 @@ public struct DeviceDetailView: View {
                             .font(.system(.caption, design: .monospaced))
                             .foregroundColor(.accentColor)
 
-                        Divider()
-
-                        HStack {
-                            Button(action: {
-                                enableFreeform()
-                            }) {
-                                HStack(spacing: 6) {
-                                    if isEnablingFreeform {
-                                        ProgressView().controlSize(.small)
-                                    } else {
-                                        Image(systemName: "macwindow.on.rectangle")
-                                    }
-                                    Text("Aktifkan Mode Jendela Bebas (Freeform)")
-                                        .font(.caption)
-                                }
-                            }
-                            .buttonStyle(.bordered)
-                            .disabled(isEnablingFreeform)
-
-                            if let msg = freeformMessage {
-                                Text(msg)
-                                    .font(.caption2)
-                                    .foregroundColor(.green)
-                            }
-                        }
-
                         HStack(alignment: .top, spacing: 6) {
                             Image(systemName: "sparkles")
                                 .foregroundColor(.yellow)
@@ -373,21 +345,6 @@ public struct DeviceDetailView: View {
     }
 
     // MARK: - Actions
-
-    private func enableFreeform() {
-        isEnablingFreeform = true
-        freeformMessage = "Mengaktifkan..."
-        Task {
-            let res = await adbService.enableFreeformDesktopMode(device: device)
-            switch res {
-            case .success(let msg):
-                freeformMessage = "✅ \(msg)"
-            case .failure(let err):
-                freeformMessage = "❌ \(err.localizedDescription)"
-            }
-            isEnablingFreeform = false
-        }
-    }
 
     private func takeScreenshot() {
         isTakingScreenshot = true

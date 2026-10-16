@@ -324,19 +324,6 @@ public final class ADBService: ObservableObject {
         }
     }
 
-    public func enableFreeformDesktopMode(device: Device) async -> Result<String, Error> {
-        guard let paths = resolver.resolve() else {
-            return .failure(NSError(domain: "DroidMirror", code: 1, userInfo: [NSLocalizedDescriptionKey: "adb binary tidak ditemukan."]))
-        }
-        let env = resolver.buildEnvironment(paths: paths)
-
-        _ = await ProcessRunner.run(executable: paths.adbPath, arguments: ["-s", device.id, "shell", "settings", "put", "global", "force_resizable_activities", "1"], environment: env)
-        _ = await ProcessRunner.run(executable: paths.adbPath, arguments: ["-s", device.id, "shell", "settings", "put", "global", "enable_freeform_support", "1"], environment: env)
-        _ = await ProcessRunner.run(executable: paths.adbPath, arguments: ["-s", device.id, "shell", "settings", "put", "global", "force_desktop_mode_on_external_displays", "1"], environment: env)
-
-        return .success("Mode Desktop & Jendela Bebas (Freeform) berhasil diaktifkan di HP!")
-    }
-
     public func restartServer() async {
         guard let paths = resolver.resolve() else { return }
         let env = resolver.buildEnvironment(paths: paths)
