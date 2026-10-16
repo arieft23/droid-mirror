@@ -175,17 +175,48 @@ public struct DeviceDetailView: View {
             Text("Pengaturan Tampilan & Performa")
                 .font(.headline)
 
-            // Preset Quality
-            Picker("Kualitas Video:", selection: $config.preset) {
-                ForEach(PresetQuality.allCases) { preset in
-                    Text(preset.rawValue).tag(preset.rawValue)
+            // Display Mode Selection
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Mode Tampilan:")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+
+                Picker("", selection: $config.useNewDisplay) {
+                    Text("📱 Mirror Layar HP").tag(false)
+                    Text("🖥️ Layar Virtual Baru (--new-display)").tag(true)
                 }
-            }
-            .pickerStyle(.menu)
-            .onChange(of: config.preset) { newValue in
-                if let matched = PresetQuality.allCases.first(where: { $0.rawValue == newValue }) {
-                    config.maxSize = matched.maxSize
-                    config.bitRateMbps = matched.bitRate
+                .pickerStyle(.segmented)
+
+                if config.useNewDisplay {
+                    HStack(spacing: 12) {
+                        Picker("Resolusi Virtual:", selection: $config.newDisplayResolution) {
+                            Text("1920x1080 (Full HD 16:9)").tag("1920x1080")
+                            Text("2560x1440 (2K QHD)").tag("2560x1440")
+                            Text("1280x720 (720p HD)").tag("1280x720")
+                            Text("3840x2160 (4K UHD)").tag("3840x2160")
+                        }
+                        .pickerStyle(.menu)
+
+                        Text("(--new-display=\(config.newDisplayResolution) -S)")
+                            .font(.system(.caption, design: .monospaced))
+                            .foregroundColor(.accentColor)
+                    }
+                    .padding(8)
+                    .background(Color.accentColor.opacity(0.08))
+                    .cornerRadius(8)
+                } else {
+                    Picker("Kualitas Video:", selection: $config.preset) {
+                        ForEach(PresetQuality.allCases) { preset in
+                            Text(preset.rawValue).tag(preset.rawValue)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .onChange(of: config.preset) { newValue in
+                        if let matched = PresetQuality.allCases.first(where: { $0.rawValue == newValue }) {
+                            config.maxSize = matched.maxSize
+                            config.bitRateMbps = matched.bitRate
+                        }
+                    }
                 }
             }
 

@@ -29,10 +29,17 @@ public final class ScrcpyService: ObservableObject {
         let env = resolver.buildEnvironment(paths: paths)
         var args: [String] = ["-s", device.id]
 
-        // Quality & Display options
-        if config.maxSize > 0 {
+        // Mode Display: Virtual New Display vs Regular Display
+        if config.useNewDisplay {
+            if config.newDisplayResolution.isEmpty {
+                args.append("--new-display")
+            } else {
+                args.append("--new-display=\(config.newDisplayResolution)")
+            }
+        } else if config.maxSize > 0 {
             args.append(contentsOf: ["--max-size", "\(config.maxSize)"])
         }
+
         if config.bitRateMbps > 0 {
             args.append(contentsOf: ["--video-bit-rate", "\(config.bitRateMbps)M"])
         }
@@ -41,7 +48,7 @@ public final class ScrcpyService: ObservableObject {
         }
 
         if config.turnScreenOff {
-            args.append("--turn-screen-off")
+            args.append("-S") // --turn-screen-off
         }
         if config.stayAwake {
             args.append("--stay-awake")

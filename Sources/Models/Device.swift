@@ -103,7 +103,7 @@ public struct ScrcpyConfig: Codable, Equatable {
     public var maxSize: Int = 1080
     public var bitRateMbps: Int = 8
     public var maxFps: Int = 60
-    public var turnScreenOff: Bool = true
+    public var turnScreenOff: Bool = true // -S
     public var stayAwake: Bool = true
     public var audioEnabled: Bool = true
     public var alwaysOnTop: Bool = false
@@ -111,6 +111,10 @@ public struct ScrcpyConfig: Codable, Equatable {
     public var showTouches: Bool = false
     public var recordScreen: Bool = false
     public var customTitle: String = ""
+
+    // Virtual New Display (--new-display)
+    public var useNewDisplay: Bool = false
+    public var newDisplayResolution: String = "1920x1080"
 
     public init() {}
 }
