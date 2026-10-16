@@ -11,6 +11,7 @@ public final class BinaryResolver {
         public let scrcpyServerPath: String
         public let isBundled: Bool
         public let frameworksPath: String?
+        public let iconDirPath: String?
     }
 
     private var cachedResolvedPaths: ResolvedPaths?
@@ -29,6 +30,7 @@ public final class BinaryResolver {
         var bundledScrcpy: String?
         var bundledServer: String?
         var bundledFrameworks: String?
+        var bundledIconDir: String?
 
         if let resURL = bundleResourceURL {
             let adbCandidate = resURL.appendingPathComponent("bin/adb").path
@@ -36,6 +38,7 @@ public final class BinaryResolver {
             let directScrcpyCandidate = resURL.appendingPathComponent("bin/scrcpy").path
             let serverCandidate = resURL.appendingPathComponent("bin/scrcpy-server").path
             let frameworksCandidate = resURL.deletingLastPathComponent().appendingPathComponent("Frameworks").path
+            let iconDirCandidate = resURL.appendingPathComponent("icons").path
 
             if fileManager.isExecutableFile(atPath: adbCandidate) {
                 bundledAdb = adbCandidate
@@ -51,6 +54,9 @@ public final class BinaryResolver {
             if fileManager.fileExists(atPath: frameworksCandidate) {
                 bundledFrameworks = frameworksCandidate
             }
+            if fileManager.fileExists(atPath: iconDirCandidate) {
+                bundledIconDir = iconDirCandidate
+            }
         }
 
         if let bAdb = bundledAdb, let bScrcpy = bundledScrcpy, let bServer = bundledServer {
@@ -59,7 +65,8 @@ public final class BinaryResolver {
                 scrcpyPath: bScrcpy,
                 scrcpyServerPath: bServer,
                 isBundled: true,
-                frameworksPath: bundledFrameworks
+                frameworksPath: bundledFrameworks,
+                iconDirPath: bundledIconDir
             )
             cachedResolvedPaths = paths
             return paths
@@ -110,7 +117,8 @@ public final class BinaryResolver {
                 scrcpyPath: foundScrcpy,
                 scrcpyServerPath: foundServer,
                 isBundled: false,
-                frameworksPath: nil
+                frameworksPath: nil,
+                iconDirPath: nil
             )
             cachedResolvedPaths = paths
             return paths
@@ -127,6 +135,10 @@ public final class BinaryResolver {
         let currentPath = env["PATH"] ?? "/usr/bin:/bin:/usr/sbin:/sbin"
         env["PATH"] = "\(adbDir):\(scrcpyDir):\(currentPath)"
         env["SCRCPY_SERVER_PATH"] = paths.scrcpyServerPath
+
+        if let iconDir = paths.iconDirPath {
+            env["SCRCPY_ICON_DIR"] = iconDir
+        }
 
         if let fw = paths.frameworksPath {
             let currentDyld = env["DYLD_LIBRARY_PATH"] ?? ""

@@ -75,11 +75,16 @@ def main():
     ]
     run(compile_cmd)
 
-    print("--- 3. Copying Info.plist and AppIcon ---")
+    print("--- 3. Copying Info.plist, AppIcon, and Custom Icons ---")
     shutil.copy2(os.path.join(ROOT_DIR, "Resources/Info.plist"), os.path.join(CONTENTS_DIR, "Info.plist"))
     icon_src = os.path.join(ROOT_DIR, "Resources/AppIcon.icns")
     if os.path.exists(icon_src):
         shutil.copy2(icon_src, os.path.join(RESOURCES_DIR, "AppIcon.icns"))
+
+    custom_icons_dir = os.path.join(ROOT_DIR, "Resources/icons")
+    bundle_icons_dir = os.path.join(RESOURCES_DIR, "icons")
+    if os.path.exists(custom_icons_dir):
+        shutil.copytree(custom_icons_dir, bundle_icons_dir, dirs_exist_ok=True)
 
     print("--- 4. Locating & Copying ADB and Scrcpy ---")
     adb_src = shutil.which("adb") or "/opt/homebrew/bin/adb"
