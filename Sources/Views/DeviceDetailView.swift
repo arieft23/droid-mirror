@@ -188,13 +188,38 @@ public struct DeviceDetailView: View {
                 .pickerStyle(.segmented)
 
                 if config.useNewDisplay {
-                    VStack(alignment: .leading, spacing: 10) {
-                        Picker("Pilihan Resolusi:", selection: $config.newDisplayResolution) {
-                            ForEach(VirtualDisplayPreset.allCases) { item in
-                                Text(item.title).tag(item.rawValue)
+                    VStack(alignment: .leading, spacing: 12) {
+                        // Orientasi Layar (Landscape vs Portrait)
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Orientasi Layar:")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+
+                            Picker("", selection: $config.displayOrientation) {
+                                ForEach(DisplayOrientation.allCases) { orient in
+                                    Text(orient.title).tag(orient)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            .onChange(of: config.displayOrientation) { newOrient in
+                                config.newDisplayResolution = VirtualDisplayPreset.defaultPreset(for: newOrient).rawValue
                             }
                         }
-                        .pickerStyle(.menu)
+
+                        // Pilihan Resolusi sesuai orientasi yang dipilih
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Pilihan Resolusi:")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+
+                            Picker("", selection: $config.newDisplayResolution) {
+                                ForEach(VirtualDisplayPreset.presets(for: config.displayOrientation)) { item in
+                                    Text(item.title).tag(item.rawValue)
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .labelsHidden()
+                        }
 
                         HStack(alignment: .top, spacing: 6) {
                             Image(systemName: "sparkles")
@@ -205,7 +230,7 @@ public struct DeviceDetailView: View {
                                 .foregroundColor(.secondary)
                         }
                     }
-                    .padding(10)
+                    .padding(12)
                     .background(Color.accentColor.opacity(0.08))
                     .cornerRadius(8)
                 } else {

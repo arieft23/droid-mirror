@@ -98,26 +98,78 @@ public enum PresetQuality: String, CaseIterable, Identifiable {
     }
 }
 
-public enum VirtualDisplayPreset: String, CaseIterable, Identifiable {
-    case qhdDesktop = "2560x1440/200"
-    case qhdFourThree = "1920x1440/200"
-    case fhdDesktop = "1920x1080/160"
-    case fhdLargeText = "1920x1080/180"
-    case fhdCompact = "1920x1080/140"
-    case fhdFourThree = "1440x1080/160"
-    case hdDesktop = "1280x720/120"
+public enum DisplayOrientation: String, Codable, CaseIterable, Identifiable {
+    case landscape = "Landscape"
+    case portrait = "Portrait"
 
     public var id: String { rawValue }
 
     public var title: String {
         switch self {
-        case .qhdDesktop: return "2560 × 1440 (16:9) • 200 DPI"
-        case .qhdFourThree: return "1920 × 1440 (4:3) • 200 DPI"
-        case .fhdDesktop: return "1920 × 1080 (16:9) • 160 DPI (Standar)"
-        case .fhdLargeText: return "1920 × 1080 (16:9) • 180 DPI (Teks Besar)"
-        case .fhdCompact: return "1920 × 1080 (16:9) • 140 DPI (Kompak)"
-        case .fhdFourThree: return "1440 × 1080 (4:3) • 160 DPI"
-        case .hdDesktop: return "1280 × 720 (16:9) • 120 DPI (Ringan)"
+        case .landscape: return "🖥️ Landscape (Mendatar)"
+        case .portrait: return "📱 Portrait (Tegak)"
+        }
+    }
+}
+
+public enum VirtualDisplayPreset: String, CaseIterable, Identifiable {
+    // Landscape (diurutkan dari resolusi tertinggi)
+    case landQhd = "2560x1440/200"
+    case landQhdFourThree = "1920x1440/200"
+    case landFhd = "1920x1080/160"
+    case landFhdLargeText = "1920x1080/180"
+    case landFhdCompact = "1920x1080/140"
+    case landFhdFourThree = "1440x1080/160"
+    case landHd = "1280x720/120"
+
+    // Portrait (diurutkan dari resolusi tertinggi)
+    case portFlagship = "1080x2400/360"
+    case portFoldCover = "960x2200/320"
+    case portFhd = "1080x1920/320"
+    case portTabletReading = "1080x1440/220"
+    case portHdPlus = "720x1600/260"
+    case portHd = "720x1280/220"
+
+    public var id: String { rawValue }
+
+    public var orientation: DisplayOrientation {
+        switch self {
+        case .landQhd, .landQhdFourThree, .landFhd, .landFhdLargeText, .landFhdCompact, .landFhdFourThree, .landHd:
+            return .landscape
+        case .portFlagship, .portFoldCover, .portFhd, .portTabletReading, .portHdPlus, .portHd:
+            return .portrait
+        }
+    }
+
+    public var title: String {
+        switch self {
+        // Landscape
+        case .landQhd: return "2560 × 1440 (16:9) • 200 DPI"
+        case .landQhdFourThree: return "1920 × 1440 (4:3) • 200 DPI"
+        case .landFhd: return "1920 × 1080 (16:9) • 160 DPI (Standar)"
+        case .landFhdLargeText: return "1920 × 1080 (16:9) • 180 DPI (Teks Besar)"
+        case .landFhdCompact: return "1920 × 1080 (16:9) • 140 DPI (Kompak)"
+        case .landFhdFourThree: return "1440 × 1080 (4:3) • 160 DPI"
+        case .landHd: return "1280 × 720 (16:9) • 120 DPI (Ringan)"
+
+        // Portrait
+        case .portFlagship: return "1080 × 2400 (20:9) • 360 DPI (Standar HP)"
+        case .portFoldCover: return "960 × 2200 (21:9) • 320 DPI (Ramping / Fold)"
+        case .portFhd: return "1080 × 1920 (16:9) • 320 DPI"
+        case .portTabletReading: return "1080 × 1440 (3:4) • 220 DPI (Baca Dokumen)"
+        case .portHdPlus: return "720 × 1600 (20:9) • 260 DPI"
+        case .portHd: return "720 × 1280 (16:9) • 220 DPI (Ringan)"
+        }
+    }
+
+    public static func presets(for orientation: DisplayOrientation) -> [VirtualDisplayPreset] {
+        return allCases.filter { $0.orientation == orientation }
+    }
+
+    public static func defaultPreset(for orientation: DisplayOrientation) -> VirtualDisplayPreset {
+        switch orientation {
+        case .landscape: return .landFhd
+        case .portrait: return .portFlagship
         }
     }
 }
@@ -138,7 +190,8 @@ public struct ScrcpyConfig: Codable, Equatable {
 
     // Virtual New Display (--new-display)
     public var useNewDisplay: Bool = false
-    public var newDisplayResolution: String = VirtualDisplayPreset.fhdDesktop.rawValue
+    public var displayOrientation: DisplayOrientation = .landscape
+    public var newDisplayResolution: String = VirtualDisplayPreset.landFhd.rawValue
 
     public init() {}
 }
