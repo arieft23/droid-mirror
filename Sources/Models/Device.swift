@@ -100,6 +100,8 @@ public enum PresetQuality: String, CaseIterable, Identifiable {
 
 public enum VirtualDisplayPreset: String, CaseIterable, Identifiable {
     case fhdDesktop = "1920x1080/160"
+    case mangaFhd = "1920x1440/200"
+    case mangaHd = "1440x1080/160"
     case fhdCompact = "1920x1080/140"
     case fhdLargeText = "1920x1080/180"
     case qhdDesktop = "2560x1440/200"
@@ -110,7 +112,9 @@ public enum VirtualDisplayPreset: String, CaseIterable, Identifiable {
 
     public var title: String {
         switch self {
-        case .fhdDesktop: return "1080p Desktop (160 DPI - Rekomendasi)"
+        case .fhdDesktop: return "1080p Desktop 16:9 (160 DPI - Rekomendasi)"
+        case .mangaFhd: return "📖 1920×1440 / 200 DPI (4:3 Manga Dual-Page - Super Tajam)"
+        case .mangaHd: return "📖 1440×1080 / 160 DPI (4:3 Manga Dual-Page - Standar)"
         case .fhdCompact: return "1080p Kompak & Luas (140 DPI)"
         case .fhdLargeText: return "1080p Teks Lebih Besar (180 DPI)"
         case .qhdDesktop: return "2K QHD Desktop (200 DPI)"
