@@ -99,27 +99,25 @@ public enum PresetQuality: String, CaseIterable, Identifiable {
 }
 
 public enum VirtualDisplayPreset: String, CaseIterable, Identifiable {
-    case fhdDesktop = "1920x1080/160"
-    case mangaFhd = "1920x1440/200"
-    case mangaHd = "1440x1080/160"
-    case fhdCompact = "1920x1080/140"
-    case fhdLargeText = "1920x1080/180"
     case qhdDesktop = "2560x1440/200"
+    case qhdFourThree = "1920x1440/200"
+    case fhdDesktop = "1920x1080/160"
+    case fhdLargeText = "1920x1080/180"
+    case fhdCompact = "1920x1080/140"
+    case fhdFourThree = "1440x1080/160"
     case hdDesktop = "1280x720/120"
-    case nativeDpi = "1920x1080"
 
     public var id: String { rawValue }
 
     public var title: String {
         switch self {
-        case .fhdDesktop: return "1080p Desktop 16:9 (160 DPI - Rekomendasi)"
-        case .mangaFhd: return "📖 1920×1440 / 200 DPI (4:3 Manga Dual-Page - Super Tajam)"
-        case .mangaHd: return "📖 1440×1080 / 160 DPI (4:3 Manga Dual-Page - Standar)"
-        case .fhdCompact: return "1080p Kompak & Luas (140 DPI)"
-        case .fhdLargeText: return "1080p Teks Lebih Besar (180 DPI)"
-        case .qhdDesktop: return "2K QHD Desktop (200 DPI)"
-        case .hdDesktop: return "720p HD Desktop (120 DPI)"
-        case .nativeDpi: return "1080p Standar (Bawaan HP / Tanpa DPI)"
+        case .qhdDesktop: return "2560 × 1440 (16:9) • 200 DPI"
+        case .qhdFourThree: return "1920 × 1440 (4:3) • 200 DPI"
+        case .fhdDesktop: return "1920 × 1080 (16:9) • 160 DPI (Standar)"
+        case .fhdLargeText: return "1920 × 1080 (16:9) • 180 DPI (Teks Besar)"
+        case .fhdCompact: return "1920 × 1080 (16:9) • 140 DPI (Kompak)"
+        case .fhdFourThree: return "1440 × 1080 (4:3) • 160 DPI"
+        case .hdDesktop: return "1280 × 720 (16:9) • 120 DPI (Ringan)"
         }
     }
 }

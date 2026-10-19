@@ -182,29 +182,25 @@ public struct DeviceDetailView: View {
                     .foregroundColor(.secondary)
 
                 Picker("", selection: $config.useNewDisplay) {
-                    Text("📱 Mirror Layar HP").tag(false)
-                    Text("🖥️ Layar Virtual Baru (--new-display)").tag(true)
+                    Text("📱 Layar Ponsel").tag(false)
+                    Text("🖥️ Layar Kedua (Virtual)").tag(true)
                 }
                 .pickerStyle(.segmented)
 
                 if config.useNewDisplay {
                     VStack(alignment: .leading, spacing: 10) {
-                        Picker("Preset Resolusi & DPI:", selection: $config.newDisplayResolution) {
+                        Picker("Pilihan Resolusi:", selection: $config.newDisplayResolution) {
                             ForEach(VirtualDisplayPreset.allCases) { item in
                                 Text(item.title).tag(item.rawValue)
                             }
                         }
                         .pickerStyle(.menu)
 
-                        Text("Parameter: --new-display=\(config.newDisplayResolution) -S")
-                            .font(.system(.caption, design: .monospaced))
-                            .foregroundColor(.accentColor)
-
                         HStack(alignment: .top, spacing: 6) {
                             Image(systemName: "sparkles")
-                                .foregroundColor(.yellow)
+                                .foregroundColor(.accentColor)
                                 .font(.caption)
-                            Text("💡 **Samsung Pro-Tip**: Resolusi **160 DPI** adalah standar emas desktop. Pasang Rutinitas 'Battery Protection' di HP agar cas berhenti di 80-85% saat tersambung USB.")
+                            Text("Layar kedua bekerja secara mandiri di jendela Mac tanpa mengganggu layar utama HP.")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                         }
@@ -233,22 +229,22 @@ public struct DeviceDetailView: View {
             // Toggles Grid
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                 Toggle("Matikan Layar HP", isOn: $config.turnScreenOff)
-                    .help("Menghemat baterai HP dan mencegah ponsel panas saat mirroring")
+                    .help("Menghemat baterai HP dan menjaga ponsel tetap dingin saat mirroring")
 
                 Toggle("Jaga HP Tetap Menyala", isOn: $config.stayAwake)
-                    .help("Mencegah HP tidur/lock screen saat terhubung")
+                    .help("Mencegah HP mengunci layar saat terhubung")
 
-                Toggle("Forward Suara (Audio)", isOn: $config.audioEnabled)
+                Toggle("Teruskan Suara ke Mac", isOn: $config.audioEnabled)
                     .help("Memutar suara dari HP melalui speaker Mac")
 
-                Toggle("Jendela Selalu di Atas", isOn: $config.alwaysOnTop)
-                    .help("Menjaga jendela scrcpy tetap di atas jendela lainnya")
+                Toggle("Jendela Selalu di Depan", isOn: $config.alwaysOnTop)
+                    .help("Menjaga jendela tampilan selalu terlihat di atas aplikasi lain")
 
-                Toggle("Tampilkan Sentuhan Layar", isOn: $config.showTouches)
-                    .help("Menampilkan indikator visual saat layar diklik/disentuh")
+                Toggle("Tampilkan Titik Sentuhan", isOn: $config.showTouches)
+                    .help("Menampilkan indikator sentuhan saat layar diklik")
 
-                Toggle("Buka Layar Penuh (Fullscreen)", isOn: $config.fullscreen)
-                    .help("Membuka mirror langsung dalam mode fullscreen")
+                Toggle("Buka Layar Penuh", isOn: $config.fullscreen)
+                    .help("Langsung membuka dalam mode satu layar penuh")
             }
         }
         .padding()
@@ -333,7 +329,7 @@ public struct DeviceDetailView: View {
                 Image(systemName: "info.circle")
                     .foregroundColor(.accentColor)
                     .font(.caption2)
-                Text("Buka HP saat mirror? Tekan **Option + O** di jendela layar untuk mematikan layar HP lagi tanpa sleep.")
+                Text("Pintasan: Tekan **Option + O** di jendela layar untuk mematikan layar HP tanpa memutus koneksi.")
                     .font(.caption2)
                     .foregroundColor(.secondary)
             }

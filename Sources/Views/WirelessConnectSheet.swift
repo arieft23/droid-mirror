@@ -23,7 +23,7 @@ public struct WirelessConnectSheet: View {
                     Text("Hubungkan Nirkabel (Wi-Fi)")
                         .font(.title2)
                         .fontWeight(.bold)
-                    Text("Gunakan scrcpy tanpa kabel USB")
+                    Text("Mirror layar tanpa memerlukan kabel USB")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
@@ -46,7 +46,7 @@ public struct WirelessConnectSheet: View {
                     Text("Pastikan HP dan Mac Terhubung ke Wi-Fi yang Sama")
                         .font(.headline)
 
-                    Text("Setelah tombol di bawah ditekan, HP akan diatur ke mode nirkabel (port 5555). Jika berhasil, kabel USB bisa langsung dicabut.")
+                    Text("Setelah tombol di bawah ditekan, mode nirkabel akan diaktifkan secara otomatis. Jika berhasil, kabel USB bisa langsung dicabut.")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }

@@ -14,7 +14,7 @@ public struct LogDrawerView: View {
 
             // Header bar
             HStack {
-                Label("Log Terminal (scrcpy / adb)", systemImage: "terminal")
+                Label("Log Diagnostik", systemImage: "terminal")
                     .font(.caption)
                     .fontWeight(.semibold)
                     .foregroundColor(.secondary)

@@ -40,9 +40,9 @@ public struct ContentView: View {
                 Button(action: {
                     restartADB()
                 }) {
-                    Label("Restart ADB", systemImage: "arrow.triangle.2.circlepath")
+                    Label("Reset Sambungan", systemImage: "arrow.triangle.2.circlepath")
                 }
-                .help("Mulai ulang layanan ADB jika HP tidak terdeteksi")
+                .help("Mulai ulang koneksi jika perangkat tidak terdeteksi")
             }
         }
     }
@@ -64,7 +64,7 @@ public struct ContentView: View {
                     Text("DroidMirror")
                         .font(.headline)
                         .fontWeight(.bold)
-                    Text("scrcpy GUI for macOS")
+                    Text("Mirror Layar Android")
                         .font(.caption2)
                         .foregroundColor(.secondary)
                 }
